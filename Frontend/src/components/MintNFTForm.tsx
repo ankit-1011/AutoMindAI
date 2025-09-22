@@ -29,7 +29,7 @@ const MintNFTForm: React.FC<MintNFTFormProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   if (!nftContext) {
     // A better UI would be to show this inside the modal
-    return <div className="text-white">Error: NFT Context not available.</div>;
+    return <div className="text-white">Error: NFT Context not available.</div>
   }
   
   const { mintVehicle } = nftContext;
