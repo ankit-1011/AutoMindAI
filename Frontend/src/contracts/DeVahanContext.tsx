@@ -1,14 +1,13 @@
 import{ createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import Web3Modal from 'web3modal';
 import { BrowserProvider, Contract, Log} from 'ethers';
-import ABI from "./DeVahanABI.json";
-import { CONTRACT_ADDRESS } from "./contractAddress";
+// import ABI from "./DeVahanABI.json";
 
 interface NFTContextType {
   currentAccount: string;
-  error: string | null;
+  // error: string | null;
   connectWallet: () => Promise<void>;
-  mintVehicle: (_owner:string, _vin:string,_make:string,_model:string,_year:number,_purchasePrice:number,_initialMileage:number,_imageURI:string) => Promise<string>; // Returns tx hash
+  // mintVehicle: (_owner:string, _vin:string,_make:string,_model:string,_year:number,_purchasePrice:number,_initialMileage:number,_imageURI:string) => Promise<string>; // Returns tx hash
   // transferNFT: (tokenId: number, price: bigint, balance: bigint) => Promise<string>; // Returns tx hash
   // getUserNFT:(address: string)=>Promise<number[]>
 }
@@ -30,14 +29,17 @@ export const NFTProvider = ({ children }: { children: ReactNode }) => {
     checkIfWalletConnected();
   }, []);
 
-  const connectWallet = async () => {
+   const connectWallet = async () => {
+    console.log('checkpoint 1')
     try {
       if (!web3Modal) throw new Error("Web3Modal not initialized");
-      
+      console.log('checkpoint 2')
       const instance = await web3Modal.connect();
+      console.log('checkpoint 3')
       const provider = new BrowserProvider(instance);
+      console.log('checkpoint 4')
       const accounts = await provider.send("eth_requestAccounts", []);
-      
+      console.log('checkpoint 5')
       setCurrentAccount(accounts[0]);
       setError(null);
 
@@ -76,60 +78,60 @@ export const NFTProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getContract = async () => {
-    if (!web3Modal) throw new Error("Web3Modal not initialized");
-    console.log('checkpoint 1')
-    const instance = await web3Modal.connect();
-    const provider = new BrowserProvider(instance);
-    console.log('checkpoint 2')
-    const signer = await provider.getSigner();
-    return new Contract(CONTRACT_ADDRESS, ABI.abi , signer);
-  };
+  // const getContract = async () => {
+  //   if (!web3Modal) throw new Error("Web3Modal not initialized");
+  //   console.log('checkpoint 1')
+  //   const instance = await web3Modal.connect();
+  //   const provider = new BrowserProvider(instance);
+  //   console.log('checkpoint 2')
+  //   const signer = await provider.getSigner();
+  //   return new Contract(CONTRACT_ADDRESS, ABI.abi , signer);
+  // };
 
-  const mintVehicle = async (_owner:string, _vin:string,_make:string,_model:string,_year:number,_purchasePrice:number,_initialMileage:number,_imageURI:string): Promise<string> => {
-    try {
-      console.log("checkpoint1")
-      const contract = await getContract();
-      console.log(contract);
-      const tx = await contract.mintVehicle(_owner, _vin,_make,_model,_year,_purchasePrice,_initialMileage,_imageURI);
-      const receipt = await tx.wait();
-      console.log(receipt);
-      console.log("miniting completed");
+  // const mintVehicle = async (_owner:string, _vin:string,_make:string,_model:string,_year:number,_purchasePrice:number,_initialMileage:number,_imageURI:string): Promise<string> => {
+  //   try {
+  //     console.log("checkpoint1")
+  //     const contract = await getContract();
+  //     console.log(contract);
+  //     const tx = await contract.mintVehicle(_owner, _vin,_make,_model,_year,_purchasePrice,_initialMileage,_imageURI);
+  //     const receipt = await tx.wait();
+  //     console.log(receipt);
+  //     console.log("miniting completed");
 
-      // const mintedEventLog = receipt.logs.find(
-      //       (log: Log) => {
-      //           try {
-      //               // This checks if the log can be parsed and is the correct event
-      //               return contract.interface.parseLog(log)?.name === 'NFT_Minted';
-      //           } catch {
-      //               // Ignore logs that can't be parsed by this interface
-      //               return false;
-      //           }
-      //       }
-      //   );
+  //     // const mintedEventLog = receipt.logs.find(
+  //     //       (log: Log) => {
+  //     //           try {
+  //     //               // This checks if the log can be parsed and is the correct event
+  //     //               return contract.interface.parseLog(log)?.name === 'NFT_Minted';
+  //     //           } catch {
+  //     //               // Ignore logs that can't be parsed by this interface
+  //     //               return false;
+  //     //           }
+  //     //       }
+  //     //   );
 
-      //   if (mintedEventLog) {
-      //       const parsedLog = contract.interface.parseLog(mintedEventLog);
+  //     //   if (mintedEventLog) {
+  //     //       const parsedLog = contract.interface.parseLog(mintedEventLog);
 
-      //       // ✅ Add this check to ensure parsedLog is not null
-      //       if (parsedLog) {
-      //           const tokenId: bigint = parsedLog.args.tokenId;
-      //           console.log("Minted token ID:", tokenId.toString());
-      //           return tokenId.toString();
-      //       }
-      //   }
+  //     //       // ✅ Add this check to ensure parsedLog is not null
+  //     //       if (parsedLog) {
+  //     //           const tokenId: bigint = parsedLog.args.tokenId;
+  //     //           console.log("Minted token ID:", tokenId.toString());
+  //     //           return tokenId.toString();
+  //     //       }
+  //     //   }
 
-      //   // This part runs if the event was not found or couldn't be parsed
-      //   console.warn("NFT_Minted event not found in logs.");
-        return tx.hash;
+  //     //   // This part runs if the event was not found or couldn't be parsed
+  //     //   console.warn("NFT_Minted event not found in logs.");
+  //       return tx.hash;
 
       
-    } catch (err) {
-      console.error('Minting failed:', err);
-      setError(err instanceof Error ? err.message : 'Minting failed');
-      throw err;
-    }
-  };
+  //   } catch (err) {
+  //     console.error('Minting failed:', err);
+  //     setError(err instanceof Error ? err.message : 'Minting failed');
+  //     throw err;
+  //   }
+  // };
 
 // const transferNFT = async (
 //   tokenId: number,
@@ -173,10 +175,10 @@ export const NFTProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <NFTContext.Provider value={{
-      currentAccount,
-      error,
+      // currentAccount,
+      // error,
       connectWallet,
-      mintVehicle,
+      // mintVehicle,
       // transferNFT,
       // getUserNFT
     }}>
