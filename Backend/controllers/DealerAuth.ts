@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import Customer from "../models/Customer";
 import Dealer from "../models/Dealer";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 // Helper to generate JWT
 const generateToken = (id:string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
 };
 
 export const Dsignup = async (req:Request, res:Response) => {
@@ -14,6 +13,7 @@ export const Dsignup = async (req:Request, res:Response) => {
   try {
     // Check if user already exists
     const existingUser = await Dealer.findOne({ email });
+    console.log(existingUser);
     if (existingUser) {
       return res.status(400).json({ message: "Dealer already exists" });
     }
@@ -55,13 +55,9 @@ export const Dlogin = async (req:Request, res:Response) => {
   try {
     // Find user
     const user = await Dealer.findOne({ email });
+    console.log(user)
+    console.log(email);
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 

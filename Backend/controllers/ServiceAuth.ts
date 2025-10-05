@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 
 const generateToken = (id:string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
 };
 
 
@@ -55,12 +55,6 @@ export const Slogin = async (req:Request, res:Response) => {
     // Find user
     const Service = await service.findOne({ email });
     if (!Service) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, Service.password);
-    if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 

@@ -1,25 +1,25 @@
 import Customer from "../models/Customer";
-import Dealer from "../models/Dealer";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
 const generateToken = (id:string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
 };
 
 
 export const Csignup = async (req:Request, res:Response) => {
   const { name, email, password } = req.body;
-
+  console.log(email);
   try {
     // Check if user already exists
     const existingUser = await Customer.findOne({ email });
+    console.log(existingUser)
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-
+    
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -58,13 +58,6 @@ export const Clogin = async (req:Request, res:Response) => {
     if (!customer) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, customer.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
     // Successful login
     res.json({
       _id: customer._id,
