@@ -1,12 +1,8 @@
 import Customer from "../models/Customer";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 
-const generateToken = (id:string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
-};
 
 
 export const Csignup = async (req:Request, res:Response) => {
@@ -36,7 +32,6 @@ export const Csignup = async (req:Request, res:Response) => {
         _id: customer._id,
         name: customer.name,
         email: customer.email,
-        token: generateToken(customer._id.toString()),
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -63,7 +58,6 @@ export const Clogin = async (req:Request, res:Response) => {
       _id: customer._id,
       name: customer.name,
       email: customer.email,
-      token: generateToken(customer._id.toString()),
     });
   } catch (error:any) {
     res.status(500).json({ message: error.message });

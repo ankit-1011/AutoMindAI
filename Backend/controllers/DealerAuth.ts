@@ -1,12 +1,7 @@
 import { Request, Response } from "express";
 import Dealer from "../models/Dealer";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 // Helper to generate JWT
-const generateToken = (id:string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
-};
-
 export const Dsignup = async (req:Request, res:Response) => {
   const { name, email, Dealer_ID, password } = req.body;
 
@@ -36,7 +31,6 @@ export const Dsignup = async (req:Request, res:Response) => {
         name: dealer.name,
         email: dealer.email,
         dealerID: dealer.Dealer_ID,
-        token: generateToken(dealer._id.toString()),
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -67,7 +61,6 @@ export const Dlogin = async (req:Request, res:Response) => {
       name: user.name,
       email: user.email,
       dealerID: user.Dealer_ID,
-      token: generateToken(user._id.toString()),
     });
   } catch (error:any) {
     res.status(500).json({ message: error.message });
