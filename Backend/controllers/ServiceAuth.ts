@@ -1,12 +1,7 @@
 import service from "../models/Service";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
-
-const generateToken = (id:string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: "30d" });
-};
 
 
 export const Ssignup = async (req:Request, res:Response) => {
@@ -35,7 +30,6 @@ export const Ssignup = async (req:Request, res:Response) => {
         _id: Service._id,
         name: Service.name,
         email: Service.email,
-        token: generateToken(Service._id.toString()),
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -63,7 +57,6 @@ export const Slogin = async (req:Request, res:Response) => {
       _id: Service._id,
       name: Service.name,
       email: Service.email,
-      token: generateToken(Service._id.toString()),
     });
   } catch (error:any) {
     res.status(500).json({ message: error.message });

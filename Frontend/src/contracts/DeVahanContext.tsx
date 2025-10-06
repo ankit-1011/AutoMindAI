@@ -1,187 +1,174 @@
-import{ createContext, useState, useEffect, ReactNode, useContext } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import Web3Modal from 'web3modal';
-import { BrowserProvider, Contract, Log} from 'ethers';
-// import ABI from "./DeVahanABI.json";
+import { BrowserProvider, Contract, JsonRpcSigner } from 'ethers';
+import ABI from './DeVahanABI.json'; // ABI for the simple ERC721 contract
+import { Contract_Address } from './contractAddress';
+// Replace with your deployed address per environment
+const CONTRACT_ADDRESS = Contract_Address;
 
 interface NFTContextType {
   currentAccount: string;
-  // error: string | null;
-  connectWallet: () => Promise<void>;
-  // mintVehicle: (_owner:string, _vin:string,_make:string,_model:string,_year:number,_purchasePrice:number,_initialMileage:number,_imageURI:string) => Promise<string>; // Returns tx hash
-  // transferNFT: (tokenId: number, price: bigint, balance: bigint) => Promise<string>; // Returns tx hash
-  // getUserNFT:(address: string)=>Promise<number[]>
+  connectWallet: () => Promise<string>;
+  mint: (to: string, tokenURI_: string,metadatahash:string) => Promise<string>;
+  addServiceRecord: (tokenId: bigint, json: string) => Promise<string>;
+  tokenURI: (tokenId: bigint) => Promise<string>;
+  getServiceRecordCount: (tokenId: bigint) => Promise<bigint>;
+  getServiceRecordAt: (tokenId: bigint, index: bigint) => Promise<string>;
 }
 
 export const NFTContext = createContext<NFTContextType | undefined>(undefined);
 
 export const NFTProvider = ({ children }: { children: ReactNode }) => {
   const [currentAccount, setCurrentAccount] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
   const [web3Modal, setWeb3Modal] = useState<Web3Modal | null>(null);
+  const [provider, setProvider] = useState<BrowserProvider | null>(null);
+  const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
+  const [contract, setContract] = useState<Contract | null>(null);
 
-  // Initialize Web3Modal once
+  // Init Web3Modal and check wallet on mount
   useEffect(() => {
-    const modal = new Web3Modal({
-      cacheProvider: true, // Optional - enables wallet connection persistence
-      providerOptions: {} // Add wallet providers here if needed
-    });
+    const modal = new Web3Modal({ cacheProvider: true, providerOptions: {} });
     setWeb3Modal(modal);
-    checkIfWalletConnected();
+    void checkIfWalletConnected();
   }, []);
 
-   const connectWallet = async () => {
-    console.log('checkpoint 1')
-    try {
-      if (!web3Modal) throw new Error("Web3Modal not initialized");
-      console.log('checkpoint 2')
-      const instance = await web3Modal.connect();
-      console.log('checkpoint 3')
-      const provider = new BrowserProvider(instance);
-      console.log('checkpoint 4')
-      const accounts = await provider.send("eth_requestAccounts", []);
-      console.log('checkpoint 5')
-      setCurrentAccount(accounts[0]);
-      setError(null);
+  // Helper: build contract from signer
+  const buildContract = (s: JsonRpcSigner) => new Contract(CONTRACT_ADDRESS, ABI.abi ?? ABI, s);
 
-      // Subscribe to accounts change
-      instance.on("accountsChanged", (accounts: string[]) => {
-        setCurrentAccount(accounts[0] || '');
+  const connectWallet = async (): Promise<string> => {
+    if (!web3Modal) throw new Error('Web3Modal not initialized');
+    const instance = await web3Modal.connect();
+
+    // Ethers v6 BrowserProvider works with an injected provider instance
+    const p = new BrowserProvider(instance);
+    const s = await p.getSigner();
+    const address = await s.getAddress();
+
+    setProvider(p);
+    setSigner(s);
+    setCurrentAccount(address);
+    setContract(buildContract(s));
+
+    // Subscribe to account and chain changes from the injected provider
+    // With ethers v6, rely on window.ethereum or the modal's returned provider for events
+    if (typeof instance.on === 'function') {
+      instance.on('accountsChanged', (accounts: string[]) => {
+        setCurrentAccount(accounts?.[0] ?? '');
       });
-      
-      return accounts[0];
-    } catch (err) {
-      console.error('Error connecting wallet:', err);
-      setError(err instanceof Error ? err.message : 'Connection failed');
-      throw err;
+      instance.on('chainChanged', () => {
+        // Force a refresh of provider/signer/contract on network change
+        // Many apps simply reload:
+        // window.location.reload();
+        // Or reinitialize:
+        void reinitializeFrom(instance);
+      });
+      instance.on('disconnect', () => {
+        setCurrentAccount('');
+        setProvider(null);
+        setSigner(null);
+        setContract(null);
+      });
     }
+
+    return address;
   };
 
-  const checkIfWalletConnected = async () => {
-    try {
-      if (!window.ethereum) {
-        setError('Please install MetaMask');
-        return false;
-      }
-      
-      const provider = new BrowserProvider(window.ethereum);
-      const accounts = await provider.send("eth_accounts", []);
-      
-      if (accounts.length > 0) {
-        setCurrentAccount(accounts[0]);
-        return true;
-      }
-      
-      return false;
-    } catch (err) {
-      console.error('Error checking wallet:', err);
-      return false;
-    }
+  const reinitializeFrom = async (injected: any) => {
+    const p = new BrowserProvider(injected);
+    const s = await p.getSigner();
+    const address = await s.getAddress();
+    setProvider(p);
+    setSigner(s);
+    setCurrentAccount(address);
+    setContract(buildContract(s));
   };
 
-  // const getContract = async () => {
-  //   if (!web3Modal) throw new Error("Web3Modal not initialized");
-  //   console.log('checkpoint 1')
-  //   const instance = await web3Modal.connect();
-  //   const provider = new BrowserProvider(instance);
-  //   console.log('checkpoint 2')
-  //   const signer = await provider.getSigner();
-  //   return new Contract(CONTRACT_ADDRESS, ABI.abi , signer);
-  // };
+  const checkIfWalletConnected = async (): Promise<boolean> => {
+    // Use window.ethereum directly to query accounts without prompting
+    // Then hydrate ethers provider if accounts exist
+    // In ethers v6, account access can be probed via eth_accounts
+    // Be sure a wallet is present
+    const eth = (globalThis as any).ethereum;
+    if (!eth) return false;
 
-  // const mintVehicle = async (_owner:string, _vin:string,_make:string,_model:string,_year:number,_purchasePrice:number,_initialMileage:number,_imageURI:string): Promise<string> => {
-  //   try {
-  //     console.log("checkpoint1")
-  //     const contract = await getContract();
-  //     console.log(contract);
-  //     const tx = await contract.mintVehicle(_owner, _vin,_make,_model,_year,_purchasePrice,_initialMileage,_imageURI);
-  //     const receipt = await tx.wait();
-  //     console.log(receipt);
-  //     console.log("miniting completed");
+    const p = new BrowserProvider(eth);
+    const accounts: string[] = await p.send('eth_accounts', []);
+    if (accounts.length > 0) {
+      const s = await p.getSigner();
+      setProvider(p);
+      setSigner(s);
+      setCurrentAccount(accounts[0]);
+      setContract(buildContract(s));
+      // Subscribe to changes
+      if (typeof eth.on === 'function') {
+        eth.on('accountsChanged', (accs: string[]) => setCurrentAccount(accs?.[0] ?? ''));
+        eth.on('chainChanged', () => void reinitializeFrom(eth));
+        eth.on('disconnect', () => {
+          setCurrentAccount('');
+          setProvider(null);
+          setSigner(null);
+          setContract(null);
+        });
+      }
+      return true;
+    }
+    return false;
+  };
 
-  //     // const mintedEventLog = receipt.logs.find(
-  //     //       (log: Log) => {
-  //     //           try {
-  //     //               // This checks if the log can be parsed and is the correct event
-  //     //               return contract.interface.parseLog(log)?.name === 'NFT_Minted';
-  //     //           } catch {
-  //     //               // Ignore logs that can't be parsed by this interface
-  //     //               return false;
-  //     //           }
-  //     //       }
-  //     //   );
+  // Contract actions
+  const mint = async (to: string, tokenURI_: string, metadatahash:string): Promise<string> => {
+    if (!contract) throw new Error('Wallet not connected');
+    const tx = await contract.mint(to, tokenURI_,metadatahash);
+    const receipt = await tx.wait();
+    return receipt.hash;
+  };
 
-  //     //   if (mintedEventLog) {
-  //     //       const parsedLog = contract.interface.parseLog(mintedEventLog);
+  const addServiceRecord = async (tokenId: bigint, json: string): Promise<string> => {
+    if (!contract) throw new Error('Wallet not connected');
+    const tx = await contract.addServiceRecord(tokenId, json);
+    const receipt = await tx.wait();
+    return receipt.hash;
+  };
 
-  //     //       // ✅ Add this check to ensure parsedLog is not null
-  //     //       if (parsedLog) {
-  //     //           const tokenId: bigint = parsedLog.args.tokenId;
-  //     //           console.log("Minted token ID:", tokenId.toString());
-  //     //           return tokenId.toString();
-  //     //       }
-  //     //   }
+  const tokenURI = async (tokenId: bigint): Promise<string> => {
+    if (!contract && provider) {
+      const readOnly = new Contract(CONTRACT_ADDRESS, ABI.abi ?? ABI, provider);
+      return readOnly.tokenURI(tokenId);
+    }
+    if (!contract) throw new Error('Contract not initialized');
+    return contract.tokenURI(tokenId);
+  };
 
-  //     //   // This part runs if the event was not found or couldn't be parsed
-  //     //   console.warn("NFT_Minted event not found in logs.");
-  //       return tx.hash;
+  const getServiceRecordCount = async (tokenId: bigint): Promise<bigint> => {
+    if (!contract && provider) {
+      const readOnly = new Contract(CONTRACT_ADDRESS, ABI.abi ?? ABI, provider);
+      return readOnly.getServiceRecordCount(tokenId);
+    }
+    if (!contract) throw new Error('Contract not initialized');
+    return contract.getServiceRecordCount(tokenId);
+  };
 
-      
-  //   } catch (err) {
-  //     console.error('Minting failed:', err);
-  //     setError(err instanceof Error ? err.message : 'Minting failed');
-  //     throw err;
-  //   }
-  // };
-
-// const transferNFT = async (
-//   tokenId: number,
-//   price: bigint,
-//   balance: bigint
-// ): Promise<string> => {
-//   try {
-//     const contract = await getContract();
-//     const tx = await contract.NFT_transfer(tokenId, price, {
-//       value: balance,
-//     });
-//     await tx.wait();
-//     return tx.hash;
-//   } catch (err) {
-//     console.error("Transfer failed:", err);
-//     setError(err instanceof Error ? err.message : "Transfer failed");
-//     throw err;
-//   }
-// };
-
-// const getUserNFT = async (address: string): Promise<number[]> => {
-//   try {
-//     const contract = await getContract();
-//     console.log('checkpoint 2');
-    
-//     const result: bigint[] = await contract.getUserNFTs(address);
-//     console.log('User NFTs:', result);
-
-//     // Convert BigInt to Number
-//     const nftArray = result.map(nft => Number(nft));
-//     console.log("Final token IDs:", nftArray);
-//     return nftArray;
-
-//   } catch (error) {
-//     console.error("Error fetching user NFTs:", error);
-//     setError("Failed to get NFTs");
-//     return [];
-//   }
-// };
-
+  const getServiceRecordAt = async (tokenId: bigint, index: bigint): Promise<string> => {
+    if (!contract && provider) {
+      const readOnly = new Contract(CONTRACT_ADDRESS, ABI.abi ?? ABI, provider);
+      return readOnly.getServiceRecordAt(tokenId, index);
+    }
+    if (!contract) throw new Error('Contract not initialized');
+    return contract.getServiceRecordAt(tokenId, index);
+  };
 
   return (
-    <NFTContext.Provider value={{
-      // currentAccount,
-      // error,
-      connectWallet,
-      // mintVehicle,
-      // transferNFT,
-      // getUserNFT
-    }}>
+    <NFTContext.Provider
+      value={{
+        currentAccount,
+        connectWallet,
+        mint,
+        addServiceRecord,
+        tokenURI,
+        getServiceRecordCount,
+        getServiceRecordAt,
+      }}
+    >
       {children}
     </NFTContext.Provider>
   );

@@ -8,7 +8,7 @@ const JAN_1ST_2030 = 1893456000;
 const ONE_GWEI: bigint = parseEther("0.001");
 
 const LockModule = buildModule("LockModule", (m) => {
-  const lock = m.contract("VehiclePassportiNFT");
+  const lock = m.contract("SimpleVehicleNFT");
   return { lock };
 });
 

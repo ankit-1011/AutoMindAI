@@ -19,7 +19,7 @@ const config: HardhatUserConfig = {
   networks: {
     og_testnet_v3: {
       url: "https://evmrpc-testnet.0g.ai",
-      chainId: 16601,
+      chainId: 16602,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
     sepolia: {
