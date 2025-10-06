@@ -103,6 +103,3 @@ MIT License
 
 ---
 
-If you want, I can also make a **more visually appealing README with sections for screenshots, workflow diagrams, and feature GIFs**, making it look like a professional project showcase.
-
-Do you want me to do that?
