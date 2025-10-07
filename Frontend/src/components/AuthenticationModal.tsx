@@ -67,11 +67,11 @@ function AuthenticationModal({
     try {
       const endpoint = isDealer
         ? isSignIn
-          ? 'http://localhost:3000/auth/dealer/login'
-          : 'http://localhost:3000/auth/dealer/signup'
+          ? 'https://og-devahan-1.onrender.com/auth/dealer/login'
+          : 'https://og-devahan-1.onrender.com/auth/dealer/signup'
         : isSignIn
-        ? 'http://localhost:3000/auth/customer/login'
-        : 'http://localhost:3000/auth/customer/signup';
+        ? 'https://og-devahan-1.onrender.com/auth/customer/login'
+        : 'https://og-devahan-1.onrender.com/auth/customer/signup';
       console.log(endpoint)
       const res = await fetch(endpoint, {
         method: 'POST',
