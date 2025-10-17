@@ -161,28 +161,28 @@ const VahanSaarthi: React.FC = () => {
 
   const handleTokenSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const car = demoCars[tokenId.toUpperCase()];
+    const car = 'fsfs';
     if (car) {
       setActiveCar(car);
-      setMessages((prev) => [
-        ...prev,
-        { 
-          id: generateId(), 
-          text: `✅ **Vehicle found in database!** 
+//       setMessages((prev) => [
+//         ...prev,
+//         { 
+//           id: generateId(), 
+//           text: `✅ **Vehicle found in database!** 
           
-**Token ID**: ${tokenId.toUpperCase()}
-**Model**: ${car.model}
-**Owner**: ${car.owner}
-**Year**: ${car.year}
-**Mileage**: ${car.mileage}
-**Insurance**: ${car.insurance}
+// **Token ID**: ${tokenId.toUpperCase()}
+// **Model**: ${car.model}
+// **Owner**: ${car.owner}
+// **Year**: ${car.year}
+// **Mileage**: ${car.mileage}
+// **Insurance**: ${car.insurance}
 
-You can now ask me specific questions about this vehicle!`, 
-          isUser: false,
-          status: 'success',
-          timestamp: new Date()
-        },
-      ]);
+// You can now ask me specific questions about this vehicle!`, 
+//           isUser: false,
+//           status: 'success',
+//           timestamp: new Date()
+//         },
+//       ]);
     } else {
       setMessages((prev) => [
         ...prev,
@@ -226,7 +226,7 @@ Please verify your Token ID or contact support.`,
     }
   };
 
-  const handleSend = async (e: React.FormEvent) => {
+const handleSend = async (e: React.FormEvent) => {
   e.preventDefault();
   if (!query.trim()) return;
 
@@ -237,142 +237,53 @@ Please verify your Token ID or contact support.`,
 
   try {
     if (mode === 'old' && activeCar) {
-      // 1️⃣ Fetch service record first
-      // const recordRes = await fetch('/api/downloadData', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ tokenID: tokenId }),
-      // });
+      // 1️⃣ Fetch service hashes using POST
+      const hashRes = await fetch("http://localhost:3000/addService/display", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vehicleId: tokenId }),
+      });
 
-      // const recordData = await recordRes.json();
-     let recordData = [
-  {
-    date: "2023-01-15",
-    service: "Initial Oil & Filter Change",
-    mileage: "15,000 km",
-    partsReplaced: ["Engine Oil (5W-30)", "Oil Filter"],
-    technician: "R. Mehta",
-    notes: "Routine 6-month oil change. Checked all fluid levels and tire pressure; no abnormalities found.",
-  },
-  {
-    date: "2023-06-20",
-    service: "Tire Rotation & Balancing",
-    mileage: "20,000 km",
-    partsReplaced: [],
-    technician: "A. Kumar",
-    notes: "Rotated all four tires, rebalanced. Inspected tread depth (7 mm average). Alignment within factory spec.",
-  },
-  {
-    date: "2023-12-05",
-    service: "Comprehensive Annual Inspection",
-    mileage: "27,500 km",
-    partsReplaced: ["Cabin Air Filter"],
-    technician: "R. Mehta",
-    notes: "All systems operational. Cabin filter replaced due to dust accumulation. Brake pads 75% remaining.",
-  },
-  {
-    date: "2024-02-10",
-    service: "Brake Inspection & Fluid Top-Up",
-    mileage: "30,000 km",
-    partsReplaced: ["Brake Fluid (DOT 4)"],
-    technician: "S. Patel",
-    notes: "Performed brake bleed; replaced fluid. Pads in good condition. Rotors smooth.",
-  },
-  {
-    date: "2024-08-15",
-    service: "Engine Tune-Up",
-    mileage: "45,000 km",
-    partsReplaced: ["Spark Plugs", "Air Filter"],
-    technician: "M. Singh",
-    notes: "Performed ECU diagnostics — no fault codes. Slight improvement in idle smoothness post tune-up.",
-  },
-  {
-    date: "2025-02-12",
-    service: "Major Service (2-Year Interval)",
-    mileage: "60,000 km",
-    partsReplaced: [
-      "Engine Oil (5W-30)",
-      "Oil Filter",
-      "Coolant",
-      "Transmission Fluid",
-      "Drive Belt",
-    ],
-    technician: "Lead Tech – P. Sharma",
-    notes: "Major 2-year service completed. All fluids replaced, belt tension adjusted. Post-service test drive OK.",
-  },
-  {
-    date: "2025-09-01",
-    service: "Battery Replacement & Diagnostics",
-    mileage: "72,000 km",
-    partsReplaced: ["12V AGM Battery"],
-    technician: "K. Joshi",
-    notes: "Battery failed load test (CCA below 350). Replaced with OEM-spec battery; system voltage stable at 14.3 V.",
-  },
-  {
-    date: "2026-03-10",
-    service: "Brake Pad Replacement (Front)",
-    mileage: "85,000 km",
-    partsReplaced: ["Front Brake Pads (Ceramic OEM)"],
-    technician: "S. Patel",
-    notes: "Pads worn to 3 mm. Replaced front pads and cleaned calipers. Rear pads still 50% remaining.",
-  },
-  {
-    date: "2026-11-22",
-    service: "Suspension & Alignment Service",
-    mileage: "100,500 km",
-    partsReplaced: ["Front Shock Absorbers", "Wheel Alignment Bolts"],
-    technician: "A. Khan",
-    notes: "Replaced front shocks due to mild oil seepage. Performed wheel alignment and road test — no pull detected.",
-  },
-  {
-    date: "2027-05-15",
-    service: "Comprehensive Annual Service",
-    mileage: "115,000 km",
-    partsReplaced: ["Oil Filter", "Engine Oil (5W-30)", "Cabin Filter"],
-    technician: "R. Mehta",
-    notes: "Routine maintenance. Checked spark plugs and belts — all within tolerance. Brake pads 60% front, 40% rear.",
-  },
-  {
-    date: "2027-12-12",
-    service: "Cooling System Overhaul",
-    mileage: "130,000 km",
-    partsReplaced: ["Radiator Hoses", "Thermostat", "Coolant"],
-    technician: "Lead Tech – P. Sharma",
-    notes: "Detected small coolant leak near lower hose. Replaced hoses, thermostat, and flushed system.",
-  },
-  {
-    date: "2028-06-25",
-    service: "5-Year Major Service & Emission Check",
-    mileage: "150,000 km",
-    partsReplaced: [
-      "Engine Oil",
-      "Oil Filter",
-      "Fuel Filter",
-      "Air Filter",
-      "Transmission Fluid",
-      "Brake Fluid",
-      "Cabin Filter",
-    ],
-    technician: "Chief Engineer – M. Singh",
-    notes: "Full 5-year service completed. Emission levels within norms. Software update applied to ECU. Vehicle in excellent condition.",
-  },
-];
+      const hashData = await hashRes.json();
+      console.log("Fetched service hashes:", hashData);
+      if (!hashData?.serviceHashes?.length) {
+        throw new Error("No service hashes found for this vehicle.");
+      }
 
-      const serviceRecord = recordData || 'No record found.';
+      // 2️⃣ For each hash, fetch JSON data from 0G
+      const recordPromises = hashData.serviceHashes.map(async (hash: string) => {
+        try {
+          const res = await fetch(`http://localhost:3000/api/fetchJSON/${hash}`);
+          const json = await res.json();
+          if (json.success) return json.data;
+          console.warn("Failed to fetch record for hash:", hash);
+          return null;
+        } catch (error) {
+          console.error("Error fetching hash:", hash, error);
+          return null;
+        }
+      });
 
-      // 2️⃣ Send record + query to 0G Compute API
-      const aiRes = await fetch('http://localhost:3000/api/ask0GCompute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const recordResults = await Promise.all(recordPromises);
+      const recordData = recordResults.filter(Boolean); // remove nulls
+
+      if (!recordData.length) {
+        throw new Error("No valid service data found for the provided hashes.");
+      }
+      console.log(recordData)
+      // 3️⃣ Send all service records + query to 0G Compute
+      const aiRes = await fetch("http://localhost:3000/api/ask0GCompute", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tokenID: tokenId,
           query,
-          serviceRecord: JSON.stringify(serviceRecord, null, 2),
+          serviceRecord: JSON.stringify(recordData, null, 2),
         }),
       });
 
       const aiData = await aiRes.json();
-      const botReply = aiData.reply || '⚠️ No response from 0G Compute';
+      const botReply = aiData.reply || "⚠️ No response from 0G Compute";
 
       setMessages((prev) => [
         ...prev,
@@ -380,26 +291,28 @@ Please verify your Token ID or contact support.`,
           id: generateId(),
           text: botReply,
           isUser: false,
-          status: aiData.verified ? 'success' : 'info',
+          status: aiData.verified ? "success" : "info",
           timestamp: new Date(),
         },
       ]);
     } else {
+      // For new car mode
       setMessages((prev) => [
         ...prev,
         {
           id: generateId(),
-          text: '✨ Ask anything about new cars here!',
+          text: "✨ Ask anything about new cars here!",
           isUser: false,
-          status: 'info',
+          status: "info",
           timestamp: new Date(),
         },
       ]);
     }
   } catch (err: any) {
+    console.error("Error in handleSend:", err);
     setMessages((prev) => [
       ...prev,
-      { id: generateId(), text: `⚠️ Error: ${err.message}`, isUser: false, status: 'error' },
+      { id: generateId(), text: `⚠️ Error: ${err.message}`, isUser: false, status: "error" },
     ]);
   }
 

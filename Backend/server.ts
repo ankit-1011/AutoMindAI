@@ -183,6 +183,7 @@ app.post("/api/uploadJSON", async (req, res) => {
 app.get("/api/fetchJSON/:rootHash", async (req, res) => {
   try {
     const { rootHash } = req.params;
+      console.log("Fetching JSON for rootHash:", rootHash);
     if (!rootHash) return res.status(400).json({ success: false, error: "rootHash is required" });
     const data = await fetchJSON(rootHash);
     return res.json({ success: true, data });
