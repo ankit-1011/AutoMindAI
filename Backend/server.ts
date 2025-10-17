@@ -24,6 +24,7 @@ app.use(fileUpload());
 
 import { ethers } from 'ethers';
 import { createZGComputeNetworkBroker } from '@0glabs/0g-serving-broker';
+import addServicesRoutes from "./routes/addServicesRoutes";
 
 
 app.use(bodyParser.json());
@@ -132,6 +133,7 @@ app.post("/api/ask0GCompute", async (req, res) => {
 
 // Auth routes
 app.use("/auth", authRoutes);
+app.use("/addService", addServicesRoutes);
 
 // ---------------------------
 // 0G Storage routes
