@@ -54,7 +54,7 @@ let broker: any;
   } catch {
     console.log("⚙️ No account found. Creating and funding one...");
     // This creates + funds the account automatically
-    await broker.ledger.addLedger(3);
+    await broker.ledger.addLedger(4);
     console.log("✅ Account created & funded with 10 OG tokens");
   }
 })();
