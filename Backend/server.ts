@@ -45,6 +45,7 @@ let broker: any;
 
 (async () => {
   broker = await createZGComputeNetworkBroker(wallet);
+  console.log(process.env.PRIVATE_KEY);
   console.log(wallet.address);
   console.log(wallet);
   console.log(broker);
