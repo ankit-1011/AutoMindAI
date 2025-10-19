@@ -17,21 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(
-  cors({
-    origin: [
-      "https://og-de-vahan-jhachanda-chandan-jhas-projects.vercel.app",
-      "http://localhost:5173",
-      "https://og-de-vahan.vercel.app"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
-
-app.options("*", cors());
-
+app.use(cors({ origin: '*', credentials: true }));
 
 app.use(express.json());
 app.use(fileUpload());
@@ -69,7 +55,7 @@ let broker: any;
     console.log("⚙️ No account found. Creating and funding one...");
     // This creates + funds the account automatically
     await broker.ledger.addLedger(4.4);
-    console.log("✅ Account created & funded with 4.4 OG tokens");
+    console.log("✅ Account created & funded with 10 OG tokens");
   }
 })();
 
