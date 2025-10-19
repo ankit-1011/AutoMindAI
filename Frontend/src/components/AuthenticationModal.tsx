@@ -63,7 +63,7 @@ function AuthenticationModal({
     }
 
     try {
-      const baseUrl = 'http://localhost:3000/auth';
+      const baseUrl = 'https://og-devahan-1.onrender.com/auth';
       const endpoint = `${baseUrl}/${role === 'user' ? 'customer' : role}/${
         isSignIn ? 'login' : 'signup'
       }`;
