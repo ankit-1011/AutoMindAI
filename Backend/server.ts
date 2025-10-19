@@ -45,6 +45,9 @@ let broker: any;
 
 (async () => {
   broker = await createZGComputeNetworkBroker(wallet);
+  console.log(wallet.address);
+  console.log(wallet);
+  console.log(broker);
   console.log("✅ 0G Compute Broker initialized");
 
   // Check if account exists or needs funding
