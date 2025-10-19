@@ -39,7 +39,7 @@ const RPC_URL =
     : 'https://evmrpc-testnet.0g.ai'; // Testnet
 
 const provider = new ethers.JsonRpcProvider(RPC_URL);
-const wallet = new ethers.Wallet(process.env.PRIVATE_KEY!, provider);
+const wallet = new ethers.Wallet(process.env.PRIVATE_KEY as string, provider);
 
 let broker: any;
 
