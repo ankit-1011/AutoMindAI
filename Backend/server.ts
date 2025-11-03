@@ -40,7 +40,7 @@ app.use(cors({
 }));
 
 // Optional but recommended: handle preflight requests globally
-app.options("*", cors());
+
 
 app.use(express.json());
 app.use(fileUpload());
