@@ -17,7 +17,30 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors({ origin: '*', credentials: true }));
+const allowedOrigins = [
+  "http://localhost:5173",        // local dev
+  "https://og-devahan.vercel.app",
+  "https://og-de-vahan-9t4wtekco-chandan-jhas-projects.vercel.app/",
+  "https://og-de-vahan.vercel.app/"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+}));
+
+// Optional but recommended: handle preflight requests globally
+app.options("*", cors());
 
 app.use(express.json());
 app.use(fileUpload());
