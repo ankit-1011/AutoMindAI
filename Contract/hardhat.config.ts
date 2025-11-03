@@ -27,6 +27,13 @@ const config: HardhatUserConfig = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 11155111,
     },
+    OG_Mainnet: {
+      url: "https://evmrpc.0g.ai",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 16661,
+    },
+
+
 
 
   },

@@ -6,9 +6,8 @@ import path from "path";
 
 // Initialize 0G clients
 function initClients() {
-  const RPC_URL = process.env.EVM_RPC_URL || "https://evmrpc-testnet.0g.ai/";
-  const INDEXER_RPC =
-    process.env.INDEXER_RPC || "https://indexer-storage-testnet-turbo.0g.ai";
+  const RPC_URL = "https://evmrpc.0g.ai";
+  const INDEXER_RPC = "https://indexer-storage-turbo.0g.ai";
   const PRIVATE_KEY = process.env.PRIVATE_KEY;
     console.log(PRIVATE_KEY);
   if (!PRIVATE_KEY) throw new Error("Missing env var: PRIVATE_KEY");
