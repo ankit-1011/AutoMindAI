@@ -17,7 +17,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-import cors from "cors";
 
 const allowedOrigins = [
   "http://localhost:5173", // Local dev
