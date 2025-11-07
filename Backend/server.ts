@@ -18,8 +18,9 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 
+
 const allowedOrigins = [
-  "http://localhost:5173", // Local dev
+  "http://localhost:5173",
   "https://og-devahan.vercel.app",
   "https://og-de-vahan.vercel.app",
   "https://og-de-vahan-9t4wtekco-chandan-jhas-projects.vercel.app"
@@ -28,9 +29,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl)
       if (!origin) return callback(null, true);
-
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -44,8 +43,8 @@ app.use(
   })
 );
 
-// Handle preflight requests globally
-app.options("*", cors());
+// ✅ Use regex instead of "*" to fix "path-to-regexp" error
+app.options(/.*/, cors());
 
 
 // Optional but recommended: handle preflight requests globally
