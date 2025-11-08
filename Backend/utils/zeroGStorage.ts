@@ -69,8 +69,9 @@ export async function uploadJSON(
     const [tree, treeErr] = await file.merkleTree();
     if (treeErr || !tree)
       throw new Error(`Merkle tree error: ${treeErr || "Unknown"}`);
-
+    console.log(file, RPC_URL, signer);
     const uploadResult = await indexer.upload(file, RPC_URL, signer);
+    console.log(uploadResult);
     const txHash = parseUploadResponse(uploadResult);
 
     return { rootHash: tree.rootHash()!, txHash };
