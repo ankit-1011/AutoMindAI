@@ -9,13 +9,12 @@ function initClients() {
   const RPC_URL = "https://evmrpc.0g.ai";
   const INDEXER_RPC = "https://indexer-storage-turbo.0g.ai";
   const PRIVATE_KEY = process.env.PRIVATE_KEY;
-    console.log(PRIVATE_KEY);
   if (!PRIVATE_KEY) throw new Error("Missing env var: PRIVATE_KEY");
 
   const provider = new ethers.JsonRpcProvider(RPC_URL);
   const signer = new ethers.Wallet(PRIVATE_KEY, provider);
   const indexer = new Indexer(INDEXER_RPC);
-
+  console.log(RPC_URL, INDEXER_RPC, signer);
   return { RPC_URL, signer, indexer };
 }
 
@@ -28,6 +27,7 @@ interface UploadResult {
  * Handles SDK upload response — flexible for both tuple and object returns.
  */
 function parseUploadResponse(result: any): string {
+  console.log("Upload response:", result);
   if (!result) throw new Error("Upload returned no result");
 
   if (Array.isArray(result)) {
@@ -62,11 +62,13 @@ export async function uploadJSON(
 
   const tmpPath = path.join(tmpDir, name);
   fs.writeFileSync(tmpPath, JSON.stringify(jsonData, null, 2), "utf8");
-
+  console.log(`Temporary JSON file created at: ${tmpPath}`);
   const file = await ZgFile.fromFilePath(tmpPath);
 
   try {
+    console.log("Generating Merkle tree...");
     const [tree, treeErr] = await file.merkleTree();
+    console.log("Merkle tree generated.");
     if (treeErr || !tree)
       throw new Error(`Merkle tree error: ${treeErr || "Unknown"}`);
     console.log(file, RPC_URL, signer);
