@@ -25,7 +25,10 @@ const allowedOrigins = [
   "https://og-de-vahan.vercel.app",
   "https://og-de-vahan-9t4wtekco-chandan-jhas-projects.vercel.app",
   "https://polvahan-jhachanda-chandan-jhas-projects.vercel.app",
-  "https://polvahan-4cknyaqlv-chandan-jhas-projects.vercel.app"
+  "https://polvahan-4cknyaqlv-chandan-jhas-projects.vercel.app",
+  "polvahan-chandan-jhas-projects.vercel.app",
+  "polvahan-jhachanda-chandan-jhas-projects.vercel.app",
+  "polvahan.vercel.app"
 ];
 
 app.use(
