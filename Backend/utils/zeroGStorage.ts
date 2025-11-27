@@ -6,7 +6,7 @@ import path from "path";
 
 // Initialize 0G clients
 function initClients() {
-  const RPC_URL = "https://evmrpc.0g.ai";
+  const RPC_URL = "https://evmrpc.0g.ai/";
   const INDEXER_RPC = "https://indexer-storage-turbo.0g.ai";
   const PRIVATE_KEY = process.env.PRIVATE_KEY;
   if (!PRIVATE_KEY) throw new Error("Missing env var: PRIVATE_KEY");
@@ -72,6 +72,7 @@ export async function uploadJSON(
     if (treeErr || !tree)
       throw new Error(`Merkle tree error: ${treeErr || "Unknown"}`);
     console.log(file, RPC_URL, signer);
+    console.log(indexer);
     const uploadResult = await indexer.upload(file, RPC_URL, signer);
     console.log(uploadResult);
     const txHash = parseUploadResponse(uploadResult);
