@@ -134,12 +134,8 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-cyber-dark text-white relative overflow-hidden">
-      {/* Background */}
-      <div className="cyber-bg">
-        <div className="cyber-grid"></div>
-        <div className="floating-particles"></div>
-      </div>
+    <div className="min-h-screen bg-white text-slate-900 relative overflow-hidden">
+      <div className="cyber-bg" />
 
       {/* Navbar */}
       <Navbar
@@ -190,20 +186,23 @@ function App() {
         if (currentPage === "home") {
           return (
             <>
-              <Hero />
-              <div className="max-w-7xl mx-auto px-4 py-24">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Hero onGetStarted={() => setShowAuthModal(true)} />
+              <div className="max-w-7xl mx-auto px-4 py-16">
+                <h2 className="text-3xl font-bold text-center text-slate-900 mb-12 animate-fadeInUp">
+                  Why <span className="cyber-text-glow">AutoMindAi</span>?
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <FeatureCard
                     title={t("feature.secureOwnership.title")}
                     description={t("feature.secureOwnership.desc")}
                     icon={
-                      <Wallet2 className="w-8 h-8 text-cyber-neon-yellow" />
+                      <Wallet2 className="w-8 h-8 text-cyber-accent" />
                     }
                   />
                   <FeatureCard
                     title={t("feature.instantTransfers.title")}
                     description={t("feature.instantTransfers.desc")}
-                    icon={<Transfer className="w-8 h-8 text-cyber-accent" />}
+                    icon={<Transfer className="w-8 h-8 text-cyber-glow" />}
                   />
                   <FeatureCard
                     title={t("feature.completeHistory.title")}
@@ -224,12 +223,12 @@ function App() {
               selectedVehicle={selectedVehicle || undefined}
             />
           ) : (
-            <div className="max-w-7xl mx-auto px-4 py-32 text-center">
+            <div className="max-w-7xl mx-auto px-4 py-32 text-center animate-fadeInUp">
               <Shield className="w-16 h-16 text-cyber-accent mb-4 mx-auto" />
-              <h2 className="text-2xl font-bold mb-4">
+              <h2 className="text-2xl font-bold mb-4 text-slate-900">
                 Authentication Required
               </h2>
-              <p className="text-cyber-muted mb-8">
+              <p className="text-slate-500 mb-8">
                 Please sign in to access service records
               </p>
               <button
@@ -249,7 +248,7 @@ function App() {
         // Default: My Vehicles
         return (
           <div className="max-w-7xl mx-auto px-4 py-12">
-            <h2 className="text-4xl font-bold mb-12 cyber-text-glow text-center">
+            <h2 className="text-4xl font-bold mb-12 cyber-text-glow text-center text-slate-900">
               {t("vehicles.title")}
             </h2>
             {availableVehicles.length === 0 ? (
@@ -276,6 +275,15 @@ function App() {
           </div>
         );
       })()}
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-slate-200 py-8 mt-8 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-slate-500 text-sm">
+            © 2026 <span className="text-cyber-accent font-semibold">AutoMindAi</span> — AI-Powered Vehicle Intelligence
+          </p>
+        </div>
+      </footer>
 
       {/* Chatbot */}
       <Chatbot />

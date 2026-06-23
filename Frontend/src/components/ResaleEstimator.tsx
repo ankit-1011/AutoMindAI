@@ -45,7 +45,7 @@ const ResaleEstimator: React.FC<ResaleEstimatorProps> = ({ isOpen, onClose, user
     {
       id: '1',
       type: 'ai',
-      content: 'Namaste! I am VahanMoolya, your AI guide to estimate your car\'s resale worth 🚗✨\n\nPlease share your car details including:\n• Make & Model (e.g., Honda City, BMW X5)\n• Year of purchase\n• Current mileage (km driven)\n• Overall condition (Excellent/Good/Fair/Poor)\n• Any accident history\n• Service record status',
+      content: 'Namaste! I am AutoMindAi, your AI guide to estimate your car\'s resale worth 🚗✨\n\nPlease share your car details including:\n• Make & Model (e.g., Honda City, BMW X5)\n• Year of purchase\n• Current mileage (km driven)\n• Overall condition (Excellent/Good/Fair/Poor)\n• Any accident history\n• Service record status',
       timestamp: new Date()
     }
   ]);
@@ -142,7 +142,7 @@ const ResaleEstimator: React.FC<ResaleEstimatorProps> = ({ isOpen, onClose, user
   };
 
   const callGeminiAPI = async (userInput: string): Promise<EstimateResult> => {
-    const prompt = `You are VahanMoolya AI, an expert Indian car resale value estimator. Based on the car details provided, estimate the current resale value in Indian Rupees (INR).
+    const prompt = `You are AutoMindAi, an expert Indian car resale value estimator. Based on the car details provided, estimate the current resale value in Indian Rupees (INR).
 
 Car Details: "${userInput}"
 
@@ -370,7 +370,7 @@ Respond with only the JSON object, no additional text.`;
         {/* Left Panel - Chat Interface */}
         <div className="w-1/2 flex flex-col border-r border-[#E5E7EB]/20">
           {/* Header */}
-          <div className="p-6 border-b border-[#E5E7EB]/20 bg-gradient-to-r from-[#FFD700]/10 to-[#00FFC2]/10">
+          <div className="p-6 border-b border-[#E5E7EB]/20 bg-gradient-to-r from-[#8B5CF6]/10 to-[#06B6D4]/10">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="relative">
@@ -378,7 +378,7 @@ Respond with only the JSON object, no additional text.`;
                   <div className="absolute inset-0 w-8 h-8 bg-[#FFD700]/20 rounded-full animate-ping"></div>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-[#FFD700]">VahanMoolya AI</h2>
+                  <h2 className="text-xl font-bold text-[#A78BFA]">AutoMindAi</h2>
                   <p className="text-sm text-[#E5E7EB]/70">Resale Value Estimator</p>
                 </div>
               </div>
@@ -406,7 +406,7 @@ Respond with only the JSON object, no additional text.`;
                   {message.type === 'ai' && (
                     <div className="flex items-center mb-2">
                       <Bot className="w-4 h-4 mr-2 text-[#00FFC2]" />
-                      <span className="text-xs font-medium text-[#00FFC2]">VahanMoolya</span>
+                      <span className="text-xs font-medium text-[#8B5CF6]">AutoMindAi</span>
                     </div>
                   )}
                   <p className="whitespace-pre-line">{message.content}</p>
@@ -418,7 +418,7 @@ Respond with only the JSON object, no additional text.`;
                 <div className="bg-[#1e2837] border border-[#E5E7EB]/20 rounded-xl p-4">
                   <div className="flex items-center space-x-2">
                     <Loader className="w-4 h-4 animate-spin text-[#00FFC2]" />
-                    <span className="text-[#E5E7EB]">VahanMoolya is analyzing with AI...</span>
+                    <span className="text-[#E5E7EB]">AutoMindAi is analyzing with AI...</span>
                   </div>
                 </div>
               </div>
@@ -530,7 +530,7 @@ Respond with only the JSON object, no additional text.`;
                     Ready for AI Analysis
                   </h3>
                   <p className="text-[#E5E7EB]/70">
-                    Share your car details with VahanMoolya AI to get<br/>
+                    Share your car details with AutoMindAi to get<br/>
                     accurate resale value estimation powered by Gemini
                   </p>
                 </div>

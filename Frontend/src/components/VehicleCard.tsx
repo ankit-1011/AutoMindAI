@@ -21,20 +21,20 @@ function VehicleCard({ vehicle, onTransfer }: {
       <div className="cyber-vehicle-info">
         <div className="flex items-center mb-4">
           <Car className="w-6 h-6 text-cyber-accent mr-3" />
-          <h3 className="text-xl font-semibold cyber-text-glow">{vehicle.name}</h3>
+          <h3 className="text-xl font-semibold text-slate-900">{vehicle.name}</h3>
         </div>
 
         <div className="space-y-3">
           <div className="cyber-vehicle-detail">
-            <span className="text-cyber-muted">{t('vehicles.plateNumber')}</span>
-            <span className="text-white font-mono">{vehicle.plate}</span>
+            <span className="text-slate-500">{t('vehicles.plateNumber')}</span>
+            <span className="text-slate-800 font-mono">{vehicle.plate}</span>
           </div>
           <div className="cyber-vehicle-detail">
-            <span className="text-cyber-muted">{t('vehicles.wallet')}</span>
-            <span className="text-white font-mono text-sm">{vehicle.wallet}</span>
+            <span className="text-slate-500">{t('vehicles.wallet')}</span>
+            <span className="text-slate-800 font-mono text-sm">{vehicle.wallet}</span>
           </div>
           <div className="cyber-vehicle-detail">
-            <span className="text-cyber-muted">{t('vehicles.tokenId')}</span>
+            <span className="text-slate-500">{t('vehicles.tokenId')}</span>
             <span className="text-cyber-accent font-mono">{vehicle.tokenId}</span>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, Plus, Train as Transfer, History, Settings, Zap, Wallet2, Shield, User, Building2, Wrench } from 'lucide-react';
+import { Car, Plus, Train as Transfer, History, Zap, Wallet2, Wrench, Brain } from 'lucide-react';
 import NavLink from './Navlink';
 import { useLanguage } from '../context/LanguageContext';
 import type { RootState } from '../Redux/store'
@@ -30,18 +30,21 @@ function Navbar({
   const user = useSelector((state: RootState) => state.user.value)
   return (
     <nav className="cyber-nav backdrop-blur-xl border-b border-cyber-accent/20 relative z-50">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-1">
-        <div className="flex items-center justify-between h-16 relative-0">
-          <div className="flex items-center cursor-pointer group ml-8 " onClick={() => setCurrentPage('home')}>
-            <img
-              src="/assets/logo.png" // Assuming the logo import handled in App or passed down
-              alt="DeVahan Logo"
-              className="w-36 h-auto cursor-pointer"
-              onClick={() => setCurrentPage('home')}
-            />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div
+            className="flex items-center gap-3 cursor-pointer group"
+            onClick={() => setCurrentPage('home')}
+          >
+            <div className="automind-logo-icon">
+              <Brain className="w-5 h-5 text-white" />
+            </div>
+            <span className="automind-logo-text">
+              AutoMind<span className="automind-logo-ai">Ai</span>
+            </span>
           </div>
           <div className="hidden md:block">
-            <div className="flex items-center space-x-6 mr-10">
+            <div className="flex items-center space-x-5">
               {isAuthenticated && currentUser?.type === 'user' && (
                 <div onClick={() => setCurrentPage('vehicles')} className="cursor-pointer">
                   <NavLink icon={<Car />} text={t('nav.myVehicles')} />
@@ -65,7 +68,7 @@ function Navbar({
 
               {isAuthenticated && currentUser?.type === 'user' && (
                 <div onClick={() => setCurrentPage('service-records')} className="cursor-pointer">
-                  <NavLink icon={<Settings />} text="Service Records" />
+                  <NavLink icon={<History />} text="Service Records" />
                 </div>
               )}
               <NavLink icon={<History />} text={t('nav.history')} />

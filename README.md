@@ -1,149 +1,560 @@
-# 🚗 DeVahan – Decentralized Vehicle Intelligence Network
+# AutoMindAi – Decentralized Vehicle Intelligence Network
 
-A decentralized ecosystem for **vehicle identity, data integrity, and AI-powered lifecycle management**, built on **0G’s decentralized compute, DA and storage infrastructure**.
+## One-Line Description
 
-**Status:** Production Ready ✅ | **Version:** 1.0
-
----
-
-## 📋 Table of Contents
-
-1. Quick Start
-2. Architecture Overview
-3. Features
-4. API Documentation
-5. Project Structure
-6. Setup Instructions
-7. How to Use
-8. AI Model Training
-9. 0G Integration
-10. Troubleshooting
-11. Future Roadmap
-12. Contributing
-13. License
+AutoMindAi is an AI-powered decentralized vehicle intelligence network that creates tamper-proof vehicle identities, service histories, and lifecycle insights using 0G Chain, Storage, and Compute.
 
 ---
 
-## 🚀 Quick Start
+## Project Summary
 
-### 1️⃣ Prerequisites
+AutoMindAi addresses the lack of transparency and trust in vehicle ownership and maintenance records.
 
-* Node.js v20+
-* npm v10+
-* 0G Wallet with OG tokens
-* IPFS or 0G Storage access key
+Today, vehicle data is fragmented across dealerships, service centers, insurers, and vehicle owners. Service records can be lost or manipulated, making resale verification difficult and creating trust issues for buyers and financial institutions.
 
-### 2️⃣ Installation
+AutoMindAi creates a decentralized ecosystem where every vehicle receives a verifiable digital identity. Vehicle ownership, service records, diagnostics, and lifecycle information are secured using 0G infrastructure.
 
-```bash
-https://github.com/chandanjha34/OG-DeVahan.git
-cd OG-DeVahan
+The platform enables:
 
-cd Backend
-npm install
+* Vehicle NFT minting by authorized dealers
+* Immutable service history management
+* Decentralized vehicle record storage
+* AI-powered maintenance predictions
+* Vehicle health scoring
+* Resale verification and trust scoring
+* Vehicle intelligence assistant (AutoMindAi)
 
-cd Frontend
-npm install
+By combining blockchain, decentralized storage, and AI, AutoMindAi establishes a trusted source of truth for vehicle lifecycle management.
 
-cd Contract
-npm install
+---
 
+## Problem Statement
 
-```
+Vehicle records are currently:
 
-### 3️⃣ Environment Setup
+* Scattered across multiple stakeholders
+* Difficult to verify during resale
+* Vulnerable to manipulation and fraud
+* Not interoperable between organizations
+* Lacking intelligent predictive insights
 
-Create a `.env` file:
+This creates inefficiencies for:
 
-# Backend Folder
+* Vehicle owners
+* Buyers
+* Dealers
+* Service centers
+* Insurance providers
+* Fleet operators
 
-PORT=3000
-RPC_URL=https://evmrpc-testnet.0g.ai/
-INDEXER_RPC=https://indexer-storage-turbo.0g.ai
-MONGO_URI=mongodb+srv://your_MongoDB_URI
-JWT_SECRET = JWT_secret
-PRIVATE_KEY = Your_Private_Key
-NODE_ENV=development
+---
 
+## Why AutoMindAi?
 
-# Contract Folder
+The global automotive ecosystem lacks a universal and trusted vehicle identity layer.
 
-PRIVATE_KEY = Your_Private_Key
+AutoMindAi introduces a decentralized framework where vehicle data becomes:
 
-```
+* Verifiable
+* Transparent
+* Immutable
+* AI-enhanced
+* Accessible across stakeholders
 
-### 4️⃣ Start the App
+The result is greater trust, lower fraud, improved maintenance planning, and stronger resale markets.
 
-```bash
+---
 
-cd Backend
-npm run dev
+## 0G Integration Plan
 
-cd Frontend
-npm run dev
+### 0G Chain
 
+**Purpose:**
 
+* Vehicle NFT ownership management
+* Dealer verification
+* Service center registration
+* On-chain metadata references
+* Vehicle ownership transfers
+
+**Data Stored:**
+
+* Vehicle NFT references
+* Ownership events
+* Service record hashes
+* Verification proofs
+
+---
+
+### 0G Storage
+
+**Purpose:**
+
+* Vehicle metadata storage
+* Service records
+* Diagnostic reports
+* Maintenance history
+* Vehicle documents
+
+**Benefits:**
+
+* Decentralized storage
+* Tamper resistance
+* High scalability
+* Long-term persistence
+
+---
+
+### 0G Compute
+
+**Purpose:**
+
+* Predictive maintenance analysis
+* Vehicle health scoring
+* Resale value estimation
+* AI-powered diagnostics
+* Intelligent vehicle assistant
+
+**Benefits:**
+
+* Decentralized AI inference
+* Scalable compute resources
+* Verifiable AI outputs
+
+---
+
+### Future Agentic ID Integration
+
+Every vehicle will evolve into an intelligent vehicle agent capable of:
+
+* Monitoring vehicle health
+* Recommending maintenance schedules
+* Generating resale intelligence
+* Supporting insurance assessments
+
+This will leverage 0G's Agentic ID standard to create intelligent, transferable vehicle identities.
+
+---
+
+## Technical Architecture
+
+AutoMindAi follows a **multi-layer decentralized architecture** that combines a React frontend, Express backend, EVM smart contracts on 0G Chain, decentralized storage on 0G Storage, and AI inference via 0G Compute — with MongoDB as an off-chain indexing and auth layer.
+
+---
+
+### High-Level System Overview
+
+```mermaid
+flowchart TB
+    subgraph Users["👥 Stakeholders"]
+        O[Vehicle Owner]
+        D[Dealer]
+        SC[Service Center]
+        B[Buyer / Verifier]
+    end
+
+    subgraph Frontend["🖥️ Frontend Layer — React + Vite + Tailwind"]
+        UI[AutoMindAi Dashboard]
+        WM[MetaMask / Web3Modal Wallet]
+        AI_UI[AutoMindAi Chatbot]
+        RE[Resale Estimator]
+    end
+
+    subgraph Backend["⚙️ Backend Layer — Node.js + Express"]
+        AUTH[/auth — JWT Auth]
+        API[/api — Storage & AI APIs]
+        SVC[/addService — Service Records]
+    end
+
+    subgraph OffChain["🗄️ Off-Chain"]
+        MDB[(MongoDB)]
+    end
+
+    subgraph OG["🌐 0G Decentralized Stack"]
+        CHAIN[0G Chain<br/>ERC-721 Smart Contract]
+        STORE[0G Storage<br/>Vehicle & Service JSON]
+        COMPUTE[0G Compute<br/>DeepSeek AI Inference]
+    end
+
+    O & D & SC & B --> UI
+    UI --> WM
+    UI --> AUTH
+    UI --> API
+    UI --> SVC
+    UI --> CHAIN
+    WM --> CHAIN
+
+    AUTH --> MDB
+    SVC --> MDB
+    API --> STORE
+    API --> COMPUTE
+    SVC --> STORE
+    CHAIN --> STORE
+
+    AI_UI --> API
+    RE --> COMPUTE
 ```
 
 ---
 
-## 🏗️ Architecture Overview
+### Architecture Layers
 
-### System Diagram
-
-```
-Client (React + Vite)
-   │
-   ▼
-Backend (Express + Node.js)
-   │
-   ├── Vehicle APIs (identity, history, diagnostics)
-   ├── 0G Storage (vehicle records)
-   ├── 0G Compute (AI diagnostics)
-   └── 0G Ledger (on-chain metadata)
-```
-
-### Data Flow
-
-1. Starts with Dealer, dealer mints NFT with all the vehicle details into the buyer's wallet by uploading metadata on 0G storage
-2. Service centers will upload service records by binding it with vehicle id(making hash of service record's json and then upload same on 0g and then hash on backend)
-3. Then owners can see their vehicles and service records ledger from their dashboard.
-4. They can also check resale value of their vehicles
-5. Then owners can enquire about someone's vehicle just by typing its vehicle id in VahanSarthi.
----
-
-## 🧩 Technology Stack
-
-| Layer      | Technology         | Purpose                            |
-| ---------- | ------------------ | ---------------------------------- |
-| Frontend   | React + Tailwind   | UI/UX for vehicle dashboard        |
-| Backend    | Node.js + Express  | REST APIs                          |
-| Blockchain | 0G Mainnet, EVM    | On-chain storage and compute       |
-| AI         | 0G Compute Network | Decentralized inference & training |
-| Storage    | 0G Storage         | Vehicle records & verification     |
-| DB         | MongoDB            | Off-chain cache and indexing       |
+| Layer | Technology | Responsibility |
+|-------|-----------|----------------|
+| **Presentation** | React, Vite, Tailwind CSS, Redux | Dashboard UI, wallet connection, role-based views |
+| **Application** | Node.js, Express.js | Auth, API gateway, 0G SDK orchestration |
+| **Blockchain** | 0G Chain (EVM), Solidity ERC-721 | Vehicle NFT minting, ownership, on-chain record hashes |
+| **Decentralized Storage** | 0G Storage | Vehicle metadata, service records, diagnostic JSON |
+| **Decentralized AI** | 0G Compute (DeepSeek R1) | Vehicle assistant, resale estimation, diagnostics |
+| **Off-Chain Index** | MongoDB | User accounts, service hash indexing, session data |
 
 ---
 
-## ⚙️ Features
+### Smart Contract — `SimpleVehicleNFT`
 
-### ✅ Core (Implemented)
+Deployed on **0G Chain** as an ERC-721 token (`VPASS` — Vehicle Passport).
+
+| Function | Description |
+|----------|-------------|
+| `mint(to, tokenURI, metadataHash)` | Dealer mints a vehicle NFT to buyer's wallet |
+| `addServiceRecord(tokenId, json)` | Appends a service record hash/JSON reference on-chain |
+| `tokenURI(tokenId)` | Returns IPFS/0G metadata URI for the vehicle |
+| `getServiceRecordCount(tokenId)` | Returns total service records linked to a vehicle |
+| `getServiceRecordAt(tokenId, index)` | Fetches a specific service record by index |
+
+**On-Chain Data:** Token ownership, token URI, metadata hash, service record references  
+**Off-Chain Data (0G Storage):** Full vehicle JSON, service details, images, diagnostic reports
+
+---
+
+### User Roles & Access
+
+```mermaid
+flowchart LR
+    subgraph Roles
+        R1[🧑 Vehicle Owner]
+        R2[🏢 Dealer]
+        R3[🔧 Service Center]
+    end
+
+    R1 --> A1[View Vehicles]
+    R1 --> A2[Transfer NFT]
+    R1 --> A3[Service History]
+    R1 --> A4[Resale Estimator]
+    R1 --> A5[AutoMindAi Chat]
+
+    R2 --> B1[Mint Vehicle NFT]
+    R2 --> B2[Upload Metadata]
+
+    R3 --> C1[Add Service Record]
+    R3 --> C2[Upload to 0G Storage]
+```
+
+---
+
+### Core Data Flows
+
+#### 1. Vehicle NFT Minting (Dealer → Owner)
+
+```mermaid
+sequenceDiagram
+    participant D as Dealer
+    participant FE as Frontend
+    participant BE as Backend
+    participant IPFS as IPFS (Pinata)
+    participant ZGS as 0G Storage
+    participant SC as Smart Contract
+    participant O as Owner Wallet
+
+    D->>FE: Fill vehicle details + upload image
+    FE->>BE: POST /api/uploadFile (vehicle image)
+    BE->>ZGS: Upload file buffer
+    ZGS-->>BE: rootHash + txHash
+    FE->>BE: POST /api/IPFS (NFT metadata JSON)
+    BE->>IPFS: Pin metadata JSON
+    IPFS-->>BE: ipfs://hash (tokenURI)
+    FE->>BE: POST /api/uploadJSON (full vehicle data)
+    BE->>ZGS: Upload vehicle JSON
+    ZGS-->>BE: metadataHash
+    FE->>SC: mint(ownerAddress, tokenURI, metadataHash)
+    SC->>O: Vehicle NFT transferred to owner wallet
+    SC-->>FE: tokenId confirmed
+```
+
+#### 2. Service Record Addition (Service Center)
+
+```mermaid
+sequenceDiagram
+    participant SC as Service Center
+    participant FE as Frontend
+    participant BE as Backend
+    participant ZGS as 0G Storage
+    participant MDB as MongoDB
+    participant CH as 0G Chain
+
+    SC->>FE: Submit service details (vehicle tokenId)
+    FE->>BE: POST /api/uploadJSON (service record)
+    BE->>ZGS: Store service JSON
+    ZGS-->>BE: rootHash
+    FE->>BE: POST /addService (tokenId + rootHash)
+    BE->>MDB: Index service hash by tokenId
+    FE->>CH: addServiceRecord(tokenId, rootHash)
+    CH-->>FE: ServiceRecordAdded event emitted
+```
+
+#### 3. AI Vehicle Assistant — AutoMindAi (0G Compute)
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as Frontend Chatbot
+    participant BE as Backend
+    participant ZGS as 0G Storage
+    participant ZGC as 0G Compute (DeepSeek R1)
+
+    U->>FE: Enter Token ID + ask question
+    FE->>BE: POST /addService/display (get service hashes)
+    BE->>MDB: Fetch indexed hashes for tokenId
+    FE->>BE: GET /api/fetchJSON/:rootHash
+    BE->>ZGS: Retrieve service record JSON
+    ZGS-->>BE: Service record data
+    FE->>BE: POST /api/ask0GCompute (tokenId, query, serviceRecord)
+    BE->>ZGC: Discover AI provider + generate auth headers
+    ZGC-->>BE: AI response (verified via TEE)
+    BE-->>FE: reply + verified flag
+    FE-->>U: AutoMindAi assistant response
+```
+
+#### 4. Vehicle Ownership Transfer
+
+```mermaid
+sequenceDiagram
+    participant O1 as Current Owner
+    participant FE as Frontend
+    participant SC as Smart Contract
+    participant O2 as New Owner
+
+    O1->>FE: Select vehicle + enter recipient wallet
+    FE->>SC: safeTransferFrom(owner, recipient, tokenId)
+    SC->>O2: NFT ownership updated on-chain
+    Note over SC: Full service history travels with NFT
+    SC-->>FE: Transfer confirmed
+```
+
+---
+
+### Backend API Reference
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/auth/customer/signup` | POST | Vehicle owner registration |
+| `/auth/customer/login` | POST | Vehicle owner login |
+| `/auth/dealer/signup` | POST | Dealer registration |
+| `/auth/dealer/login` | POST | Dealer login |
+| `/auth/service/signup` | POST | Service center registration |
+| `/auth/service/login` | POST | Service center login |
+| `/api/uploadFile` | POST | Upload vehicle image to 0G Storage |
+| `/api/uploadJSON` | POST | Upload JSON metadata to 0G Storage |
+| `/api/fetchJSON/:rootHash` | GET | Fetch JSON from 0G Storage |
+| `/api/IPFS` | POST | Pin NFT metadata to IPFS (Pinata) |
+| `/api/ask0GCompute` | POST | AI inference via 0G Compute |
+| `/addService` | POST | Index service record hash in MongoDB |
+| `/addService/display` | POST | Retrieve service hashes by tokenId |
+
+---
+
+### On-Chain vs Off-Chain Data Split
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        0G CHAIN (On-Chain)                  │
+│  • Vehicle NFT ownership (ERC-721)                          │
+│  • tokenURI (IPFS metadata pointer)                           │
+│  • metadataHash (0G Storage root hash)                      │
+│  • Service record hash references (array per tokenId)       │
+│  • Ownership transfer events                                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     0G STORAGE (Decentralized)              │
+│  • Full vehicle metadata JSON (make, model, VIN, etc.)      │
+│  • Service record details (date, parts, cost, center)       │
+│  • Vehicle images and documents                               │
+│  • Diagnostic reports                                       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    MONGODB (Off-Chain Index)                  │
+│  • User / Dealer / Service Center accounts (JWT auth)       │
+│  • Service record hash index mapped to tokenId              │
+│  • Session and role management                              │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   0G COMPUTE (Decentralized AI)               │
+│  • Vehicle health analysis (DeepSeek R1 70B)                  │
+│  • Resale value estimation                                  │
+│  • AutoMindAi assistant responses (TEE-verified)            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Project Directory Structure
+
+```
+OG-DeVahan/
+├── Frontend/                  # React + Vite UI
+│   ├── src/
+│   │   ├── components/        # Hero, Navbar, Chatbot, VehicleCard, etc.
+│   │   ├── contracts/         # Web3 context, ABI, wallet connect
+│   │   ├── Redux/             # Auth & user state
+│   │   └── translations/      # Multi-language support (EN, HI, Punjabi)
+│
+├── Backend/                   # Express API server
+│   ├── routes/                # authRoutes, addServicesRoutes
+│   ├── controllers/           # Auth & service logic
+│   ├── utils/                 # zeroGStorage SDK helpers
+│   └── config/                # MongoDB connection
+│
+└── Contract/                  # Hardhat smart contracts
+    ├── contracts/Lock.sol     # SimpleVehicleNFT (ERC-721)
+    └── ignition/              # Deployment configs (0G Testnet/Mainnet)
+```
+
+---
+
+### Security Model
+
+* **Wallet-based ownership** — Vehicle NFTs are owned by user wallets (MetaMask); no centralized custody
+* **Immutable records** — Service hashes stored on-chain cannot be altered retroactively
+* **Decentralized storage** — Vehicle data on 0G Storage is tamper-resistant and independently verifiable
+* **TEE-verified AI** — 0G Compute responses are cryptographically verified before display
+* **Role-based access** — Dealers, owners, and service centers have separate authenticated flows via JWT
+
+---
+
+## Technology Stack
+
+**Frontend:**
+
+* React
+* Tailwind CSS
+* Vite
+
+**Backend:**
+
+* Node.js
+* Express.js
+
+**Blockchain:**
+
+* 0G Chain
+* EVM Smart Contracts
+
+**Storage:**
+
+* 0G Storage
+
+**AI:**
+
+* 0G Compute
+
+**Database:**
+
+* MongoDB
+
+---
+
+## Target Users
+
+* Vehicle Owners
+* Used Vehicle Buyers
+* Dealerships
+* Service Centers
+* Fleet Operators
+* Insurance Companies
+* Vehicle Financing Institutions
+
+---
+
+## Development Roadmap
+
+### Wave 1 – Project Scoping & Architecture
+
+* Finalize system architecture
+* Design smart contract structure
+* Define 0G integrations
+* Create technical documentation
+* Develop UI/UX wireframes
+
+### Wave 2 – Testnet Prototype
 
 * Vehicle NFT minting
-* Service record storage via 0G
-* AI-based maintenance predictions
-* Dealer & service provider registration
-* Data verification via Merkle proofs
-* Basic dashboard for vehicle health
+* 0G Storage integration
+* Dealer onboarding workflow
+* Basic dashboard deployment
 
-### 🔮 Upcoming (Q1 2026)
+### Wave 3 – Mainnet Deployment
 
-* Smart INFTs (intelligent evolving NFTs)
-* Predictive repair scheduling
-* Vehicle resale verification
-* Cross-chain interoperability
-* Insurance & finance modules
+* Deploy smart contracts on 0G Mainnet
+* Complete ownership workflows
+* Service record verification system
+
+### Wave 4 – AI Intelligence Layer
+
+* Predictive maintenance engine
+* Vehicle health scoring
+* Resale intelligence module
+
+### Wave 5 – Growth & Agentic Vehicles
+
+* Agentic ID integration
+* AI vehicle assistant
+* Early user onboarding
+* Partnership expansion
 
 ---
 
+## Project Vision
 
+Our vision is to create the world's first decentralized vehicle intelligence network where every vehicle possesses a verifiable digital identity, transparent lifecycle history, and AI-powered intelligence.
+
+AutoMindAi aims to become the foundational trust infrastructure for vehicle ownership, maintenance, resale, insurance, and mobility ecosystems powered by the 0G decentralized AI stack.
+
+---
+
+## Team & Execution
+
+**Team Lead:** Ankit Mishra
+
+**Background:**
+
+* Frontend & MERN Stack Developer
+* Angular Developer
+* Web3 Builder
+* Community Leader in the Blockchain Ecosystem
+* Experience building AI and decentralized applications
+
+**Current Status:**
+Production-ready architecture and development in progress with a clear roadmap toward full 0G integration and mainnet deployment.
+
+---
+
+## Repository
+
+**GitHub:**
+https://github.com/chandanjha34/OG-DeVahan
+
+---
+
+## Hashtags
+
+#0GBridge
+#BuildOn0G
+#AIxWeb3
+#AutoMindAi
+#DecentralizedAI

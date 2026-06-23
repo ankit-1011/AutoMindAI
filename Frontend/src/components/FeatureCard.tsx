@@ -6,12 +6,12 @@ function FeatureCard({ title, description, icon }: {
   icon: React.ReactNode;
 }) {
   return (
-    <div className="cyber-feature-card">
+    <div className="cyber-feature-card group">
       <div className="cyber-icon-container">
         {icon}
       </div>
-      <h3 className="text-xl font-bold mb-4 cyber-text-glow">{title}</h3>
-      <p className="text-cyber-muted leading-relaxed">{description}</p>
+      <h3 className="text-lg font-bold mb-3 text-slate-900 group-hover:text-cyber-accent transition-colors">{title}</h3>
+      <p className="text-slate-500 leading-relaxed text-sm">{description}</p>
     </div>
   );
 }

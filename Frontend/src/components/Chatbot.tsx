@@ -42,11 +42,11 @@ const demoCars: Record<string, { model: string; insurance: string; owner: string
   },
 };
 
-// Define neon colors
+// AutoMindAi theme colors
 const neonColors = {
-  blue: '#00FFC2',
-  green: '#1DE9B6',
-  gold: '#FFD700'
+  blue: '#8B5CF6',
+  green: '#06B6D4',
+  gold: '#A78BFA'
 };
 
 type Message = { 
@@ -57,7 +57,7 @@ type Message = {
   timestamp?: Date;
 };
 
-const VahanSaarthi: React.FC = () => {
+const AutoMindAiChat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [mode, setMode] = useState<'choose' | 'new' | 'old'>('choose');
@@ -81,7 +81,7 @@ const VahanSaarthi: React.FC = () => {
       setMessages([
         { 
           id: generateId(), 
-          text: '🚗 **Namaste!** I am *VahanSaarthi*, your AI car assistant. Are you looking for a **new car** or an **old car**?', 
+          text: '🚗 **Namaste!** I am *AutoMindAi*, your intelligent car assistant. Are you looking for a **new car** or an **old car**?', 
           isUser: false,
           status: 'info',
           timestamp: new Date()
@@ -384,26 +384,26 @@ const handleSend = async (e: React.FormEvent) => {
           >
             {/* Enhanced Header with glassmorphism */}
             <div 
-              className="bg-gradient-to-r from-[#00FFC2] to-[#1DE9B6] text-black p-6 flex justify-between items-center relative overflow-hidden"
+              className="bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4] text-white p-6 flex justify-between items-center relative overflow-hidden"
               style={{
-                background: 'linear-gradient(135deg, #00FFC2 0%, #1DE9B6 50%, #FFD700 100%)',
-                boxShadow: '0 8px 32px rgba(0, 255, 194, 0.3)'
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #06B6D4 50%, #A78BFA 100%)',
+                boxShadow: '0 8px 32px rgba(139, 92, 246, 0.3)'
               }}
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                   {mode === 'old' && activeCar ? (
-                    <Database className="w-6 h-6 text-black" />
+                    <Database className="w-6 h-6 text-white" />
                   ) : (
-                    <Bot className="w-6 h-6 text-black" />
+                    <Bot className="w-6 h-6 text-white" />
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-black">VahanSaarthi</h3>
-                  <p className="text-sm text-black/70">
+                  <h3 className="font-bold text-xl text-white">AutoMindAi</h3>
+                  <p className="text-sm text-white/80">
                     {mode === 'old' && activeCar 
                       ? `Database Mode - ${activeCar.model}` 
-                      : 'AI Car Assistant'
+                      : 'AI Vehicle Assistant'
                     }
                   </p>
                 </div>
@@ -504,7 +504,7 @@ const handleSend = async (e: React.FormEvent) => {
                     <span className="text-white/80">
                       {mode === 'old' && activeCar 
                         ? 'Querying vehicle database...' 
-                        : 'VahanSaarthi is thinking...'
+                        : 'AutoMindAi is thinking...'
                       }
                     </span>
                   </div>
@@ -556,7 +556,7 @@ const handleSend = async (e: React.FormEvent) => {
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder={
                         loading 
-                          ? (mode === 'old' && activeCar ? 'Querying database...' : 'VahanSaarthi is thinking...') 
+                          ? (mode === 'old' && activeCar ? 'Querying database...' : 'AutoMindAi is thinking...') 
                           : mode === 'old' && activeCar 
                             ? `Ask about ${activeCar.model}...`
                             : 'Ask me anything about cars...'
@@ -593,4 +593,4 @@ const handleSend = async (e: React.FormEvent) => {
   );
 };
 
-export default VahanSaarthi;
+export default AutoMindAiChat;
