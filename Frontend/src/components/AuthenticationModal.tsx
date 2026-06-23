@@ -1,5 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { X, Shield, User, Building2, Wrench } from 'lucide-react';
+import {
+  X,
+  Shield,
+  User,
+  Building2,
+  Wrench,
+  Brain,
+  Mail,
+  Lock,
+  Wallet,
+  Sparkles,
+  UserPlus,
+} from 'lucide-react';
 import { NFTContext } from '../contracts/DeVahanContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { assignAddress } from '../Redux/features/wallet';
@@ -22,19 +34,22 @@ interface AuthenticationModalProps {
   }) => void;
 }
 
+const roles = [
+  { id: 'user' as const, label: 'Owner', icon: User },
+  { id: 'dealer' as const, label: 'Dealer', icon: Building2 },
+  { id: 'service' as const, label: 'Service', icon: Wrench },
+];
+
 function AuthenticationModal({
   isOpen,
   onClose,
-  metaMaskAddress,
-  onMetaMaskConnect,
-  onSignIn,
 }: AuthenticationModalProps) {
   const [role, setRole] = useState<'user' | 'dealer' | 'service'>('user');
   const [isSignIn, setIsSignIn] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   const walletAddress = useSelector((state: RootState) => state.wallet.value);
   const nftcontext = useContext(NFTContext);
-  if (!nftcontext) return <p>Error loading NFT context.</p>;
+  if (!nftcontext) return null;
 
   const connect = async () => {
     try {
@@ -51,7 +66,7 @@ function AuthenticationModal({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    let payload: any = {
+    const payload: Record<string, unknown> = {
       email: formData.get('email'),
       password: formData.get('password'),
     };
@@ -67,24 +82,25 @@ function AuthenticationModal({
       const endpoint = `${baseUrl}/${role === 'user' ? 'customer' : role}/${
         isSignIn ? 'login' : 'signup'
       }`;
-      console.log(endpoint, payload);
+
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      console.log(res)
+
       const data = await res.json();
       if (res.ok) {
         dispatch(assignEmail(data.email));
         dispatch(assignUser(data.name));
-        dispatch(loginSuccess({
-          name: data.name,
-          email: data.email,
-          role,
-          token: data.token,
-        }));
-        alert(`Success: ${data.message || 'Logged in successfully!'}`);
+        dispatch(
+          loginSuccess({
+            name: data.name,
+            email: data.email,
+            role,
+            token: data.token,
+          })
+        );
         onClose();
       } else {
         alert(`Error: ${data.message}`);
@@ -96,99 +112,192 @@ function AuthenticationModal({
 
   if (!isOpen) return null;
 
+  const submitLabel = isSignIn
+    ? 'Sign In'
+    : role === 'dealer'
+    ? 'Register as Dealer'
+    : role === 'service'
+    ? 'Register Service Center'
+    : 'Create Account';
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-      <div className="bg-gray-900 text-yellow-300 p-8 rounded-2xl shadow-lg w-full max-w-md relative border border-yellow-400">
-        <button onClick={onClose} className="absolute top-4 right-4 text-yellow-400 hover:text-yellow-200">
+    <div
+      className="auth-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div
+        className="auth-modal-card relative w-full max-w-[440px] animate-fadeInUp"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 z-10 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+          aria-label="Close"
+        >
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-2xl font-bold text-center mb-6">Authentication Portal</h2>
-
-        {/* Role Selection */}
-        <div className="flex justify-center space-x-4 mb-6">
-          <button
-            onClick={() => setRole('user')}
-            className={`px-4 py-2 rounded-lg font-semibold ${role === 'user' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-yellow-400 border border-yellow-500'}`}
-          >
-            <User className="inline-block w-4 h-4 mr-1" /> User
-          </button>
-          <button
-            onClick={() => setRole('dealer')}
-            className={`px-4 py-2 rounded-lg font-semibold ${role === 'dealer' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-yellow-400 border border-yellow-500'}`}
-          >
-            <Building2 className="inline-block w-4 h-4 mr-1" /> Dealer
-          </button>
-          <button
-            onClick={() => setRole('service')}
-            className={`px-4 py-2 rounded-lg font-semibold ${role === 'service' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-yellow-400 border border-yellow-500'}`}
-          >
-            <Wrench className="inline-block w-4 h-4 mr-1" /> Service Center
-          </button>
+        {/* Compact Header */}
+        <div className="auth-modal-header px-6 pt-5 pb-4 flex items-center gap-3">
+          <div className="auth-modal-logo shrink-0">
+            <Brain className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left min-w-0">
+            <h2 className="text-lg font-bold text-slate-900 leading-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-cyan-500">AutoMindAi</span>
+            </h2>
+            <p className="text-xs text-slate-500 truncate">
+              {isSignIn ? 'Sign in to your account' : 'Create a new account'}
+            </p>
+          </div>
         </div>
 
-        {/* Sign In / Sign Up */}
-        <div className="flex justify-center space-x-4 mb-8">
-          <button
-            onClick={() => setIsSignIn(true)}
-            className={`px-4 py-2 rounded-lg ${isSignIn ? 'bg-yellow-400 text-gray-900 font-semibold' : 'bg-gray-800 text-yellow-400 border border-yellow-500'}`}
-          >
-            Sign In
-          </button>
-          <button
-            onClick={() => setIsSignIn(false)}
-            className={`px-4 py-2 rounded-lg ${!isSignIn ? 'bg-yellow-400 text-gray-900 font-semibold' : 'bg-gray-800 text-yellow-400 border border-yellow-500'}`}
-          >
-            Sign Up
-          </button>
-        </div>
+        <div className="px-6 pb-5">
+          {/* Sign In / Sign Up + Role in one row area */}
+          <div className="auth-segment mb-3">
+            <button
+              type="button"
+              onClick={() => setIsSignIn(true)}
+              className={`auth-segment-btn ${isSignIn ? 'auth-segment-btn-active' : ''}`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsSignIn(false)}
+              className={`auth-segment-btn ${!isSignIn ? 'auth-segment-btn-active' : ''}`}
+            >
+              Sign Up
+            </button>
+          </div>
 
-        <button
-          onClick={connect}
-          className="mb-6 w-full px-6 py-3 rounded-xl font-semibold text-gray-800 bg-gradient-to-r from-yellow-400 to-yellow-300"
-        >
-          {walletAddress ? `Connected: ${walletAddress.slice(0, 9)}...` : 'Connect Wallet'}
-        </button>
+          {/* Role pills */}
+          <div className="flex gap-1.5 mb-3">
+            {roles.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setRole(id)}
+                className={`auth-role-pill flex-1 ${role === id ? 'auth-role-pill-active' : ''}`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span className="text-[11px]">{label}</span>
+              </button>
+            ))}
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {!isSignIn && (
-            <>
-              <div>
-                <label className="block text-sm mb-1">Name</label>
-                <input type="text" name="name" className="w-full p-2 rounded bg-gray-800 text-yellow-300 border border-yellow-400" required />
+          {/* Wallet connect */}
+          <button
+            type="button"
+            onClick={connect}
+            className={`auth-wallet-btn mb-3 ${walletAddress ? 'auth-wallet-btn-connected' : ''}`}
+          >
+            <Wallet className="w-4 h-4 shrink-0" />
+            <span className="truncate text-xs font-medium">
+              {walletAddress
+                ? `Connected · ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+                : 'Connect MetaMask Wallet'}
+            </span>
+            {walletAddress && (
+              <span className="ml-auto w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+            )}
+          </button>
+
+          <div className="auth-divider mb-3">
+            <span>or with email</span>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-2.5">
+            {!isSignIn && (
+              <>
+                <div className="auth-input-group auth-input-group-compact">
+                  <div className="auth-input-wrap">
+                    <UserPlus className="auth-input-icon" />
+                    <input
+                      id="name"
+                      type="text"
+                      name="name"
+                      placeholder="Full name"
+                      className="auth-input"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {role === 'dealer' && (
+                  <div className="auth-input-group auth-input-group-compact">
+                    <div className="auth-input-wrap">
+                      <Building2 className="auth-input-icon" />
+                      <input
+                        id="dealer-id"
+                        type="text"
+                        name="Dealer_ID"
+                        placeholder="Dealer ID"
+                        className="auth-input"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {role === 'service' && (
+                  <div className="auth-input-group auth-input-group-compact">
+                    <div className="auth-input-wrap">
+                      <Wrench className="auth-input-icon" />
+                      <input
+                        id="service-id"
+                        type="text"
+                        name="Service_ID"
+                        placeholder="Service Center ID"
+                        className="auth-input"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className="auth-input-group auth-input-group-compact">
+              <div className="auth-input-wrap">
+                <Mail className="auth-input-icon" />
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  placeholder="Email address"
+                  className="auth-input"
+                  required
+                />
               </div>
+            </div>
 
-              {role === 'dealer' && (
-                <div>
-                  <label className="block text-sm mb-1">Dealer ID</label>
-                  <input type="text" name="Dealer_ID" className="w-full p-2 rounded bg-gray-800 text-yellow-300 border border-yellow-400" required />
-                </div>
+            <div className="auth-input-group auth-input-group-compact">
+              <div className="auth-input-wrap">
+                <Lock className="auth-input-icon" />
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  className="auth-input"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" className="auth-submit-btn group !mt-1">
+              {isSignIn ? (
+                <Shield className="w-4 h-4 mr-1.5 transition-transform group-hover:scale-110" />
+              ) : (
+                <Sparkles className="w-4 h-4 mr-1.5 transition-transform group-hover:scale-110" />
               )}
-
-              {role === 'service' && (
-                <div>
-                  <label className="block text-sm mb-1">Service Center ID</label>
-                  <input type="text" name="Service_ID" className="w-full p-2 rounded bg-gray-800 text-yellow-300 border border-yellow-400" required />
-                </div>
-              )}
-            </>
-          )}
-
-          <div>
-            <label className="block text-sm mb-1">Email</label>
-            <input type="email" name="email" className="w-full p-2 rounded bg-gray-800 text-yellow-300 border border-yellow-400" required />
-          </div>
-
-          <div>
-            <label className="block text-sm mb-1">Password</label>
-            <input type="password" name="password" className="w-full p-2 rounded bg-gray-800 text-yellow-300 border border-yellow-400" required />
-          </div>
-
-          <button type="submit" className="w-full bg-yellow-400 text-gray-900 font-semibold py-3 rounded-xl hover:bg-yellow-300 transition-colors">
-            <Shield className="w-4 h-4 mr-2 inline" />
-            {isSignIn ? 'Sign In' : role === 'dealer' ? 'Register as Dealer' : role === 'service' ? 'Register Service Center' : 'Sign Up'}
-          </button>
-        </form>
+              {submitLabel}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
